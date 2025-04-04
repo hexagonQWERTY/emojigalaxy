@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Haven - Discord Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        :root {
+            --discord-blurple: #5865F2;
+            --discord-green: #57F287;
+            --background: #1a1a1a;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            background-color: var(--background);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(45deg, #2c2f33, #23272a);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .emoji-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .emoji-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .emoji-name {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .join-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--discord-blurple);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .join-button:hover {
+            transform: scale(1.05);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--discord-green);
+            color: black;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #00000020;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .emoji-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Emoji Haven</h1>
+        <p>Unlock 100 custom emojis for your Discord experience!</p>
+        <a href="https://discord.gg/cV7GhwsJFW" class="join-button">Join Server</a>
+        <a href="https://discord.gg/cV7GhwsJFW" class="join-button">Join 2nd Server</a>
+    </div>
+
+    <div class="emoji-grid" id="emoji-grid">
+        <!-- Emojis will be dynamically added here -->
+    </div>
+
+    <div class="toast" id="toast">Emoji copied to clipboard!</div>
+
+    <footer>
+        <p>© 2023 Emoji Haven - All emojis available to server members</p>
+    </footer>
+
+    <script>
+        // Sample emojis (replace with your actual emoji URLs)
+        const emojis = [
+            { name: 'pepehappy', url: 'https://cdn3.emoji.gg/emojis/PepeHappy.png' },
+            { name: 'catdance', url: 'https://cdn3.emoji.gg/emojis/CatDance.gif' },
+            { name: 'pogchamp', url: 'https://cdn3.emoji.gg/emojis/PogChamp.png' },
+            // Add more emojis here...
+        ];
+
+        const emojiGrid = document.getElementById('emoji-grid');
+        const toast = document.getElementById('toast');
+
+        // Populate emoji grid
+        emojis.forEach(emoji => {
+            const card = document.createElement('div');
+            card.className = 'emoji-card';
+            card.innerHTML = `
+                <img src="${emoji.url}" class="emoji" alt="${emoji.name}">
+                <div class="emoji-name">:${emoji.name}:</div>
+            `;
+            
+            card.addEventListener('click', () => {
+                navigator.clipboard.writeText(`:${emoji.name}:`);
+                showToast();
+            });
+
+            emojiGrid.appendChild(card);
+        });
+
+        function showToast() {
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // Animate emoji cards on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.emoji-card').forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
